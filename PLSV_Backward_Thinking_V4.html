@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backward Thinking — PLSV Mastery Lab</title>
+<style>
+:root{--navy:#101d3a;--navy2:#17294d;--blue:#2878d0;--cyan:#49c2dc;--gold:#f2bd55;--ink:#17233b;--muted:#65728a;--paper:#f4f7fc;--line:#dce4f0;--white:#fff;--green:#16845b;--red:#c54b55}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+button,input{font:inherit}button{cursor:pointer}.shell{max-width:900px;margin:0 auto;padding:24px 18px 50px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.brand{font-size:.8rem;font-weight:800;letter-spacing:.12em;color:#52627d}.pill{background:#e7f3ff;color:#1764ad;padding:6px 11px;border-radius:99px;font-size:.75rem;font-weight:800}
+.hero{background:linear-gradient(135deg,var(--navy),#203d70);color:white;border-radius:24px;padding:30px;position:relative;overflow:hidden;box-shadow:0 16px 36px #17294d22}
+.hero:after{content:"";position:absolute;width:230px;height:230px;border:1px solid #ffffff22;border-radius:50%;right:-60px;top:-95px;box-shadow:0 0 0 28px #ffffff08,0 0 0 58px #ffffff06}
+.eyebrow{color:#8fe3f0;font-size:.75rem;font-weight:900;letter-spacing:.15em}.hero h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.05;margin:12px 0 8px;letter-spacing:-.04em}.hero p{color:#d6e1f3;max-width:570px;margin:0}.hero-stats{display:flex;gap:22px;margin-top:24px;flex-wrap:wrap}.stat strong{display:block;font-size:1.5rem;color:var(--gold)}.stat span{font-size:.78rem;color:#d6e1f3}
+.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:24px;margin-top:18px;box-shadow:0 7px 22px #243b5b08}.panel h2{margin:0 0 6px;font-size:1.25rem}.sub{color:var(--muted);font-size:.92rem;margin:0 0 18px}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;font-size:.82rem;font-weight:800;margin-bottom:6px}.field input{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;outline:none}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2878d022}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:800;transition:.15s}.btn-primary{background:var(--blue);color:white}.btn-primary:hover{background:#1e64b4;transform:translateY(-1px)}.btn-light{background:#edf2f9;color:#33445f}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.actions{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap}
+.hidden{display:none!important}.progress-wrap{margin:18px 0 14px}.progress-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;font-weight:700;margin-bottom:7px}.progress{height:8px;background:#e6ecf5;border-radius:20px;overflow:hidden}.progress>div{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));width:0;transition:width .2s}
+.leveltag{display:inline-flex;align-items:center;gap:7px;font-size:.75rem;font-weight:900;letter-spacing:.04em;color:#1764ad;background:#eaf4ff;border-radius:99px;padding:6px 10px}.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.qnum{font-size:.82rem;color:var(--muted);font-weight:800}.question{font-size:1.17rem;font-weight:750;line-height:1.55;margin:17px 0 18px;white-space:pre-line}
+.options{display:grid;gap:10px}.option{display:flex;align-items:flex-start;gap:12px;text-align:left;width:100%;padding:13px 14px;border:1.5px solid var(--line);background:white;border-radius:13px;color:var(--ink);transition:.15s}.option:hover{border-color:#91bce9;background:#f8fbff}.option.selected{border-color:var(--blue);background:#eef6ff;box-shadow:0 0 0 2px #2878d018}.letter{flex:0 0 29px;height:29px;border-radius:9px;background:#edf2f9;color:#40516d;display:grid;place-items:center;font-weight:900;font-size:.8rem}.selected .letter{background:var(--blue);color:white}.option-text{padding-top:2px}
+.answer-feedback{padding:14px 15px;border-radius:13px;margin-top:14px;font-size:.92rem}
+.answer-feedback.good{background:#eaf7f0;border:1px solid #b9e2ca;color:#176b48}
+.answer-feedback.try{background:#fff7e8;border:1px solid #f0d59c;color:#805511}
+.answer-feedback.reveal{background:#fff0f0;border:1px solid #efc4c4;color:#8e3038}
+.answer-feedback strong{display:block;margin-bottom:4px}
+.navdots{display:flex;gap:6px;flex-wrap:wrap;margin-top:18px}.dot{width:30px;height:30px;border:1px solid var(--line);background:white;border-radius:9px;font-size:.72rem;font-weight:800;color:#65728a}.dot.done{background:#e8f4ef;border-color:#b7ddca;color:#16734f}.dot.current{outline:2px solid var(--blue);color:var(--blue)}
+.result-score{font-size:3.4rem;font-weight:950;letter-spacing:-.06em;color:var(--navy);line-height:1}.result-score small{font-size:1rem;letter-spacing:0;color:var(--muted)}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.result-box{background:#f3f6fb;border-radius:13px;padding:13px}.result-box strong{display:block;font-size:1.25rem}.result-box span{font-size:.76rem;color:var(--muted)}
+.review{border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:12px}.review h3{font-size:.96rem;margin:0 0 8px}.review p{margin:6px 0;font-size:.9rem}.correct{color:var(--green);font-weight:800}.wrong{color:var(--red);font-weight:800}.explain{background:#f4f7fc;padding:11px 12px;border-radius:10px;color:#40516d;margin-top:10px!important}
+.footer{text-align:center;color:#8490a4;font-size:.75rem;margin-top:24px}
+@media(max-width:600px){.shell{padding:14px 12px 35px}.hero{padding:23px 20px;border-radius:18px}.panel{padding:18px}.formgrid{grid-template-columns:1fr}.result-grid{grid-template-columns:1fr 1fr}.question{font-size:1.06rem}}
+@media print{body{background:white}.top,.hero,.actions,.navdots,.footer{display:none!important}.panel{box-shadow:none;border:0}.review{break-inside:avoid}}
+
+/* VISUAL REFRESH — vibrant Mathematics Lab */
+body{
+  background:
+    radial-gradient(circle at 8% 8%, #d9f4f2 0, transparent 24rem),
+    radial-gradient(circle at 94% 22%, #ffe8c8 0, transparent 22rem),
+    linear-gradient(145deg,#f2f6ff 0%,#f8faff 48%,#eef7f7 100%);
+  background-attachment:fixed;
+}
+.shell{max-width:960px}
+.top{margin-bottom:20px}
+.brand{color:#24446f;letter-spacing:.16em}
+.pill{background:#fff0d8;color:#885514;border:1px solid #f2d39e}
+.hero{
+  background:
+    radial-gradient(circle at 88% 18%,#ffffff22 0 5px,transparent 6px),
+    radial-gradient(circle at 80% 70%,#ffffff16 0 3px,transparent 4px),
+    linear-gradient(120deg,#101d3a 0%,#173e70 54%,#126b79 100%);
+  border:1px solid #ffffff25;
+  box-shadow:0 20px 45px #142d5128;
+}
+.hero:before{
+  content:"";
+  position:absolute;right:9%;bottom:-95px;width:230px;height:230px;
+  border:2px solid #f2bd5570;border-radius:50%;
+  box-shadow:0 0 0 18px #49c2dc12,0 0 0 42px #ffffff08;
+}
+.hero:after{
+  content:"＋  ×  ÷  −";
+  position:absolute;right:28px;top:28px;width:auto;height:auto;
+  border:0;border-radius:0;box-shadow:none;
+  color:#ffffff20;font-size:1.4rem;font-weight:900;letter-spacing:.45em;
+}
+.hero h1{letter-spacing:-.055em;text-shadow:0 4px 20px #06152c55}
+.eyebrow{color:#73e2df}
+.hero-stats{gap:12px}
+.stat{padding:10px 15px;border:1px solid #ffffff24;background:#ffffff0d;border-radius:14px;backdrop-filter:blur(5px)}
+.stat strong{color:#ffd277}
+.panel{
+  border:1px solid #d8e3f2;border-radius:22px;
+  box-shadow:0 12px 30px #18365b0c,0 2px 7px #18365b08;
+}
+#start.panel{border-top:4px solid #35b8b0}
+#quiz .panel{border-top:4px solid #2878d0}
+#result .panel:first-child{border-top:4px solid #e6a83d}
+.panel h2{letter-spacing:-.025em}
+.sub{color:#65748e}
+.field input{background:#fbfdff;border:1.5px solid #d7e2f0;transition:.18s}
+.field input:focus{border-color:#20a7b0;box-shadow:0 0 0 4px #20a7b018}
+.btn{border-radius:13px;box-shadow:0 3px 8px #1b355014}
+.btn-primary{
+  background:linear-gradient(110deg,#236ed0,#168d9b);
+  box-shadow:0 7px 16px #2378c52b;
+}
+.btn-primary:hover{background:linear-gradient(110deg,#1d60ba,#117b88)}
+.btn-light{background:#edf3fb;border:1px solid #dbe5f1;color:#314968}
+.progress-wrap{padding:13px 16px;background:#ffffffc9;border:1px solid #dce6f2;border-radius:15px;backdrop-filter:blur(8px)}
+.progress{height:10px;background:#e5edf7}
+.progress>div{background:linear-gradient(90deg,#2878d0 0%,#20b7b0 55%,#efb44f 100%);border-radius:20px}
+.leveltag{padding:7px 12px;border:1px solid transparent}
+.leveltag.level-1{background:#e4f5ff;color:#17659d;border-color:#b9e3f7}
+.leveltag.level-2{background:#e6f7f1;color:#147454;border-color:#bce8d5}
+.leveltag.level-3{background:#fff2df;color:#965b12;border-color:#f4d7a5}
+.leveltag.level-4{background:#f0eaff;color:#6740a4;border-color:#d8c8fb}
+.qnum{color:#78869d;letter-spacing:.08em}
+.question{font-size:1.22rem;letter-spacing:-.015em;color:#172b4b}
+.option{
+  border:1.5px solid #dce5f0;border-radius:15px;padding:14px 15px;
+  box-shadow:0 2px 7px #1a34500a;
+}
+.option:nth-child(1) .letter{background:#e7f2ff;color:#2466aa}
+.option:nth-child(2) .letter{background:#e5f7f2;color:#177b65}
+.option:nth-child(3) .letter{background:#fff3df;color:#99631c}
+.option:nth-child(4) .letter{background:#f1eaff;color:#7049a8}
+.option:hover{border-color:#65b8c8;background:#f4fcfc;transform:translateY(-1px)}
+.option.selected{border-color:#2189bb;background:linear-gradient(100deg,#edf6ff,#edfbfa);box-shadow:0 0 0 3px #2878d018}
+.option.selected .letter{background:#246fbd;color:white}
+.option:disabled{opacity:.78;cursor:default;transform:none}
+.navdots{padding-top:5px}
+.dot{border-radius:10px;background:#f8faff}
+.dot.done{background:#e5f7ee;border-color:#a9dfc4;color:#14734f}
+.dot.current{outline:2px solid #2585c6;background:#edf6ff}
+.answer-feedback{border-radius:15px;padding:15px 16px;line-height:1.6}
+.answer-feedback.good{background:linear-gradient(110deg,#e8f8ef,#f1fbf5);border-color:#a9dfc0;color:#176b48}
+.answer-feedback.try{background:linear-gradient(110deg,#fff5df,#fffaf0);border-color:#efd08b;color:#805511}
+.answer-feedback.reveal{background:linear-gradient(110deg,#fff0f0,#fff8f8);border-color:#efbcbc;color:#8e3038}
+.result-score{color:#176e87}
+.result-box{background:linear-gradient(145deg,#f0f6ff,#f3f9f8);border:1px solid #e0eaf4}
+.review{border:1px solid #dce6f0;border-left:4px solid #43aeb2;background:#fff}
+.review:nth-child(4n+2){border-left-color:#e5ad4b}
+.review:nth-child(4n+3){border-left-color:#7d68c5}
+.review:nth-child(4n+4){border-left-color:#3986cb}
+.explain{background:#f2f7fc;border:1px solid #e4edf6}
+.footer{color:#77869c}
+@media(max-width:600px){
+  .hero:after{font-size:1rem;right:15px;top:16px}
+  .hero-stats{gap:8px}
+  .stat{padding:8px 10px}
+  .question{font-size:1.08rem}
+}
+
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top"><div class="brand">MATH • REASON • SOLVE</div><div class="pill">KELAS VII SMP</div></div>
+  <header class="hero">
+    <div class="eyebrow">MATHEMATICS CHALLENGE</div>
+    <h1>BACKWARD<br>THINKING</h1>
+    <p>PLSV Mastery Lab — temukan bilangan awal dengan membalikkan urutan operasi. Pahami prosesnya, bukan sekadar menebak hasilnya.</p>
+    <div class="hero-stats">
+      <div class="stat"><strong>20</strong><span>Soal tantangan</span></div>
+      <div class="stat"><strong>4</strong><span>Level kesulitan</span></div>
+      <div class="stat"><strong>100</strong><span>Skor maksimal</span></div>
+    </div>
+  </header>
+
+  <section id="start" class="panel">
+    <h2>Siap memulai tantangan?</h2>
+    <p class="sub">Isi identitas terlebih dahulu. Setiap soal memiliki satu jawaban paling tepat. Nilai dan pembahasan akan ditampilkan setelah kuis dikumpulkan.</p>
+    <div class="formgrid">
+      <div class="field"><label for="student">Nama siswa</label><input id="student" type="text" placeholder="Tuliskan nama lengkap"></div>
+      <div class="field"><label for="className">Kelas</label><input id="className" type="text" placeholder="Contoh: VII-A"></div>
+    </div>
+    <div class="actions"><span class="sub" style="margin:0">Setiap soal memiliki 2 kesempatan. Posisi jawaban benar tersebar seimbang. Skor 5 poin jika benar pada percobaan pertama, 2,5 poin jika benar pada percobaan kedua.</span><button class="btn btn-primary" id="startBtn">Mulai kuis →</button></div>
+  </section>
+
+  <section id="quiz" class="hidden">
+    <div class="progress-wrap"><div class="progress-meta"><span id="progressText">Soal 1 dari 20</span><span id="answeredText">0/20 terjawab</span></div><div class="progress"><div id="progressBar"></div></div></div>
+    <div class="panel">
+      <div class="qhead"><span class="leveltag" id="levelTag">LEVEL 1 · FOUNDATION</span><span class="qnum" id="qNumber">SOAL 01</span></div>
+      <div class="question" id="questionText"></div>
+      <div class="options" id="options"></div>
+      <div id="answerFeedback" class="hidden" aria-live="polite"></div>
+      <div class="actions" style="justify-content:flex-start">
+        <button class="btn btn-primary" id="checkBtn" disabled>Periksa jawaban</button>
+        <button class="btn btn-light hidden" id="retryAnswerBtn">Coba sekali lagi</button>
+        <span class="sub" id="attemptNote" style="margin:0"></span>
+      </div>
+      <div class="navdots" id="navdots"></div>
+      <div class="actions">
+        <button class="btn btn-light" id="prevBtn">← Sebelumnya</button>
+        <button class="btn btn-primary" id="nextBtn">Berikutnya →</button>
+        <button class="btn btn-primary hidden" id="finishBtn">Kumpulkan kuis</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" class="hidden">
+    <div class="panel">
+      <div class="eyebrow" style="color:#2878d0">CHALLENGE COMPLETED</div>
+      <h2 id="resultTitle">Hasil pengerjaan</h2>
+      <p class="sub" id="studentSummary"></p>
+      <div class="result-score"><span id="score">0</span><small> / 100</small></div>
+      <div class="result-grid">
+        <div class="result-box"><strong id="correctCount">0</strong><span>Jawaban benar</span></div>
+        <div class="result-box"><strong id="wrongCount">0</strong><span>Jawaban salah</span></div>
+        <div class="result-box"><strong id="emptyCount">0</strong><span>Belum dijawab</span></div>
+      </div>
+      <p id="feedbackSummary"></p>
+      <div class="actions"><button class="btn btn-light" id="printBtn">Cetak hasil</button><button class="btn btn-primary" id="retryBtn">Ulangi kuis</button></div>
+    </div>
+    <div class="panel">
+      <h2>Pembahasan dan evaluasi</h2>
+      <p class="sub">Periksa kembali urutan operasi, model PLSV, dan hasil akhirnya.</p>
+      <div id="reviewList"></div>
+    </div>
+  </section>
+  <div class="footer">BACKWARD THINKING • PLSV MASTERY LAB</div>
+</div>
+<script>
+const questions = [
+{level:1,title:"LEVEL 1 · FOUNDATION",q:"Sebuah bilangan dikalikan 4, kemudian ditambah 13. Hasil akhirnya adalah 65. Berapakah bilangan semula?",o:["11","12","13","14"],a:2,e:"Misalkan bilangan awal x. Modelnya 4x + 13 = 65. Kurangi 13: 4x = 52. Bagi 4: x = 13."},
+{level:1,title:"LEVEL 1 · FOUNDATION",q:"Rina memikirkan sebuah bilangan. Bilangan tersebut dikurangi 8, kemudian hasilnya dikalikan 5. Jika hasil akhirnya 85, tentukan bilangan yang dipikirkan Rina.",o:["23","24","25","26"],a:2,e:"Modelnya 5(x − 8) = 85. Bagi 5: x − 8 = 17. Tambahkan 8: x = 25."},
+{level:1,title:"LEVEL 1 · FOUNDATION",q:"Sebuah bilangan dibagi 3, kemudian ditambah 12. Hasil akhirnya adalah 27. Tentukan bilangan semula.",o:["42","45","48","51"],a:1,e:"Modelnya x/3 + 12 = 27. Kurangi 12: x/3 = 15. Kalikan 3: x = 45."},
+{level:1,title:"LEVEL 1 · FOUNDATION",q:"Andi memiliki sejumlah kelereng. Ia memberikan 7 kelereng kepada temannya. Sisa kelerengnya kemudian dikalikan 4 dan menghasilkan 68. Berapa kelereng Andi mula-mula?",o:["21","23","24","25"],a:2,e:"Modelnya 4(x − 7) = 68. Bagi 4: x − 7 = 17. Tambahkan 7: x = 24 kelereng."},
+{level:1,title:"LEVEL 1 · FOUNDATION",q:"Suatu bilangan dikalikan 6, kemudian dikurangi 17. Hasil akhirnya adalah 55. Tentukan bilangan tersebut.",o:["10","11","12","13"],a:2,e:"Modelnya 6x − 17 = 55. Tambahkan 17: 6x = 72. Bagi 6: x = 12."},
+{level:2,title:"LEVEL 2 · MULTI-STEP",q:"Sebuah bilangan ditambah 9, kemudian hasilnya dikalikan 3. Setelah itu, hasilnya dikurangi 12 sehingga diperoleh 60. Berapakah bilangan awal?",o:["13","14","15","16"],a:2,e:"Modelnya 3(x + 9) − 12 = 60. Tambahkan 12: 3(x + 9) = 72. Bagi 3: x + 9 = 24. Jadi x = 15."},
+{level:2,title:"LEVEL 2 · MULTI-STEP",q:"Dinda memiliki sejumlah uang. Ia menggunakan Rp15.000 untuk membeli makanan. Sisa uangnya kemudian dibagi rata kepada 3 orang dan masing-masing memperoleh Rp20.000. Berapa uang Dinda mula-mula?",o:["Rp60.000","Rp65.000","Rp75.000","Rp80.000"],a:2,e:"Misalkan uang awal x. (x − 15.000)/3 = 20.000. Kalikan 3: x − 15.000 = 60.000. Jadi x = Rp75.000."},
+{level:2,title:"LEVEL 2 · MULTI-STEP",q:"Sebuah bilangan dikalikan 5, kemudian ditambah 20. Hasilnya dibagi 4 dan menghasilkan 30. Tentukan bilangan semula.",o:["18","20","22","24"],a:1,e:"Modelnya (5x + 20)/4 = 30. Kalikan 4: 5x + 20 = 120. Kurangi 20 lalu bagi 5: x = 20."},
+{level:2,title:"LEVEL 2 · MULTI-STEP",q:"Umur seorang ayah 4 kali umur anaknya. Jika umur ayah dikurangi 12 tahun, hasilnya sama dengan 3 kali umur anaknya ditambah 3 tahun. Berapa umur anak tersebut?",o:["12 tahun","14 tahun","15 tahun","16 tahun"],a:2,e:"Misalkan umur anak x, maka umur ayah 4x. Persamaan 4x − 12 = 3x + 3. Kurangi 3x dan tambahkan 12: x = 15 tahun."},
+{level:2,title:"LEVEL 2 · MULTI-STEP",q:"Sebuah bilangan dikurangi 6, kemudian dibagi 2. Hasilnya ditambah 11 dan menghasilkan 25. Tentukan bilangan awal.",o:["30","32","34","36"],a:2,e:"Modelnya (x − 6)/2 + 11 = 25. Kurangi 11: (x − 6)/2 = 14. Kalikan 2 dan tambahkan 6: x = 34."},
+{level:3,title:"LEVEL 3 · APPLICATION",q:"Sebuah toko memberikan diskon Rp12.000 dari harga sebuah barang. Seseorang membeli dua barang dengan harga setelah diskon yang sama. Total pembayaran Rp176.000. Berapakah harga awal satu barang?",o:["Rp90.000","Rp95.000","Rp100.000","Rp110.000"],a:2,e:"Misalkan harga awal satu barang x. 2(x − 12.000) = 176.000. Bagi 2: x − 12.000 = 88.000. Jadi x = Rp100.000."},
+{level:3,title:"LEVEL 3 · APPLICATION",q:"Budi memiliki sejumlah uang. Ia menggunakan setengah dari uangnya untuk membeli buku, kemudian mendapatkan tambahan Rp18.000 dari ibunya. Uang Budi sekarang menjadi Rp58.000. Berapa uang Budi sebelum membeli buku?",o:["Rp70.000","Rp76.000","Rp80.000","Rp84.000"],a:2,e:"Modelnya x/2 + 18.000 = 58.000. Kurangi 18.000: x/2 = 40.000. Kalikan 2: x = Rp80.000."},
+{level:3,title:"LEVEL 3 · APPLICATION",q:"Sebuah bilangan ditambah 15. Hasilnya kemudian dibagi 5. Setelah itu, hasil pembagian dikalikan 8 dan diperoleh 40. Tentukan bilangan awal.",o:["8","10","12","15"],a:1,e:"Modelnya 8((x + 15)/5) = 40. Bagi 8: (x + 15)/5 = 5. Kalikan 5: x + 15 = 25. Jadi x = 10."},
+{level:3,title:"LEVEL 3 · APPLICATION",q:"Sebuah persegi panjang memiliki panjang 5 cm lebih besar daripada lebarnya. Jika kelilingnya 50 cm, tentukan panjang dan lebarnya.",o:["Lebar 9 cm, panjang 14 cm","Lebar 10 cm, panjang 15 cm","Lebar 11 cm, panjang 16 cm","Lebar 12 cm, panjang 17 cm"],a:1,e:"Misalkan lebar x dan panjang x + 5. Keliling 2(x + x + 5) = 50. Maka 4x + 10 = 50, sehingga x = 10. Lebar 10 cm dan panjang 15 cm."},
+{level:3,title:"LEVEL 3 · APPLICATION",q:"Dalam sebuah permainan, poin awal seorang peserta dikalikan 3, kemudian dikurangi 25. Selanjutnya peserta mendapat bonus 10 poin. Jika skor akhirnya 90, berapa poin awal peserta?",o:["30","32","35","38"],a:2,e:"Modelnya 3x − 25 + 10 = 90. Sederhanakan menjadi 3x − 15 = 90. Maka 3x = 105 dan x = 35 poin."},
+{level:4,title:"LEVEL 4 · MASTER CHALLENGE",q:"Sebuah bilangan ditambah 7, hasilnya dikalikan 4, kemudian dikurangi 16. Hasil akhirnya dibagi 2 dan diperoleh 30. Tentukan bilangan awal.",o:["13","14","15","16"],a:2,e:"Modelnya [4(x + 7) − 16]/2 = 30. Kalikan 2: 4(x + 7) − 16 = 60. Tambahkan 16 dan bagi 4: x + 7 = 19. Jadi x = 12. Perhatikan: pilihan jawaban harus 12." ,fix:true},
+{level:4,title:"LEVEL 4 · MASTER CHALLENGE",q:"Ibu membagikan uang kepada tiga anak. Anak pertama memperoleh Rp10.000 lebih banyak daripada anak kedua. Anak ketiga memperoleh dua kali uang anak kedua. Jika total uang Rp110.000, berapa uang masing-masing anak?",o:["Rp25.000, Rp35.000, Rp50.000","Rp20.000, Rp30.000, Rp60.000","Rp30.000, Rp40.000, Rp40.000","Rp25.000, Rp30.000, Rp55.000"],a:0,e:"Misalkan anak kedua menerima x. Anak pertama x + 10.000 dan anak ketiga 2x. Maka x + (x + 10.000) + 2x = 110.000. Jadi 4x = 100.000 dan x = 25.000. Urutannya: anak pertama Rp35.000, anak kedua Rp25.000, anak ketiga Rp50.000. Dengan demikian opsi yang benar adalah Rp35.000, Rp25.000, Rp50.000." ,fix:true},
+{level:4,title:"LEVEL 4 · MASTER CHALLENGE",q:"Sebuah bilangan dikalikan 2, kemudian ditambah 10. Hasilnya sama dengan tiga kali bilangan tersebut dikurangi 15. Tentukan bilangan itu.",o:["20","22","25","27"],a:2,e:"Persamaannya 2x + 10 = 3x − 15. Tambahkan 15 dan kurangi 2x pada kedua ruas: x = 25. Pemeriksaan: 2(25) + 10 = 60 dan 3(25) − 15 = 60."},
+{level:4,title:"LEVEL 4 · MASTER CHALLENGE",q:"Tiga tahun yang lalu, umur kakak adalah dua kali umur adiknya. Lima tahun yang akan datang, jumlah umur mereka adalah 37 tahun. Berapakah umur mereka sekarang?",o:["Kakak 16 tahun, adik 10 tahun","Kakak 17 tahun, adik 10 tahun","Kakak 18 tahun, adik 11 tahun","Kakak 19 tahun, adik 12 tahun"],a:1,e:"Misalkan umur adik y dan kakak x. Tiga tahun lalu: x − 3 = 2(y − 3), sehingga x = 2y − 3. Lima tahun mendatang: x + y + 10 = 37. Substitusi memberi 3y + 7 = 37, jadi y = 10 dan x = 17 tahun."},
+{level:4,title:"LEVEL 4 · MASTER CHALLENGE",q:"Sebuah bilangan diproses dengan dua mesin. Mesin A mengalikan bilangan dengan 4 lalu menambah 18. Mesin B menambah bilangan dengan 9 lalu mengalikan hasilnya dengan 6. Jika kedua mesin menghasilkan angka yang sama, tentukan bilangan awal dan hasil akhir kedua mesin.",o:["Bilangan awal −18, hasil −54","Bilangan awal −16, hasil −46","Bilangan awal 18, hasil 90","Bilangan awal 27, hasil 126"],a:0,e:"Samakan hasil: 4x + 18 = 6(x + 9). Maka 4x + 18 = 6x + 54, sehingga −36 = 2x dan x = −18. Hasil mesin A: 4(−18) + 18 = −54. Hasil mesin B: 6(−18 + 9) = −54."}
+];
+// Correct the two deliberately validated items to their exact answer positions and text.
+questions[15].o=["11","12","13","14"]; questions[15].a=1; questions[15].e="Modelnya [4(x + 7) − 16]/2 = 30. Kalikan 2: 4(x + 7) − 16 = 60. Tambahkan 16: 4(x + 7) = 76. Bagi 4: x + 7 = 19, sehingga x = 12.";
+questions[16].o=["Anak pertama Rp35.000, kedua Rp25.000, ketiga Rp50.000","Anak pertama Rp25.000, kedua Rp35.000, ketiga Rp50.000","Anak pertama Rp35.000, kedua Rp30.000, ketiga Rp45.000","Anak pertama Rp30.000, kedua Rp20.000, ketiga Rp60.000"]; questions[16].a=0; questions[16].e="Misalkan uang anak kedua x. Anak pertama x + 10.000 dan anak ketiga 2x. Maka 4x + 10.000 = 110.000, sehingga x = 25.000. Jadi anak pertama Rp35.000, anak kedua Rp25.000, dan anak ketiga Rp50.000.";
+// Sebarkan posisi kunci jawaban secara seimbang: A, B, C, D masing-masing 5 kali.
+const correctPositionPattern = [0,1,2,3, 1,2,3,0, 2,3,0,1, 3,0,1,2, 0,1,2,3];
+questions.forEach((q, i) => {
+  const originalOptions = q.o.slice();
+  const correctOption = originalOptions[q.a];
+  const distractors = originalOptions.filter((_, index) => index !== q.a);
+  // Variasikan urutan pengecoh agar tidak selalu berpindah dengan pola yang sama.
+  const shift = (i * 2 + 1) % distractors.length;
+  const rotated = distractors.slice(shift).concat(distractors.slice(0, shift));
+  const target = correctPositionPattern[i];
+  const reordered = [];
+  let d = 0;
+  for (let slot = 0; slot < 4; slot++) {
+    reordered.push(slot === target ? correctOption : rotated[d++]);
+  }
+  q.o = reordered;
+  q.a = target;
+});
+
+let current=0, answers=Array(questions.length).fill(null), attempts=Array(questions.length).fill(0),
+    checked=Array(questions.length).fill(false), studentName="", studentClass="";
+const $=id=>document.getElementById(id);
+function start(){
+  studentName=$("student").value.trim(); studentClass=$("className").value.trim();
+  if(!studentName){alert("Silakan isi nama siswa terlebih dahulu.");$("student").focus();return;}
+  $("start").classList.add("hidden");$("quiz").classList.remove("hidden");render();
+}
+function render(){
+  const q=questions[current], done=checked[current], tries=attempts[current];
+  $("levelTag").textContent=q.title; $("levelTag").className="leveltag level-"+q.level;
+  $("qNumber").textContent="SOAL "+String(current+1).padStart(2,"0");
+  $("questionText").textContent=q.q;
+  $("progressText").textContent=`Soal ${current+1} dari ${questions.length}`;
+  $("answeredText").textContent=`${checked.filter(Boolean).length}/${questions.length} selesai diperiksa`;
+  $("progressBar").style.width=((checked.filter(Boolean).length)/questions.length*100)+"%";
+  $("options").innerHTML="";
+  q.o.forEach((op,i)=>{
+    const b=document.createElement("button");
+    b.className="option"+(answers[current]===i?" selected":"");
+    b.innerHTML=`<span class="letter">${"ABCD"[i]}</span><span class="option-text"></span>`;
+    b.querySelector(".option-text").textContent=op;
+    b.disabled=done || (tries===1 && answers[current]!==null && !done);
+    b.onclick=()=>{if(!done){answers[current]=i;render();}};
+    $("options").appendChild(b);
+  });
+
+  const fb=$("answerFeedback");
+  fb.className="hidden"; fb.innerHTML="";
+  $("checkBtn").classList.toggle("hidden",done);
+  $("checkBtn").disabled=answers[current]===null;
+  $("retryAnswerBtn").classList.add("hidden");
+  $("attemptNote").textContent=done ? (tries===1?"Benar pada percobaan pertama.":"Jawaban sudah diperiksa.") : (tries===1?"Kesempatan terakhir: pilih jawaban sekali lagi.":"Kesempatan menjawab: 2 kali.");
+  if(done){
+    fb.className="answer-feedback "+(answers[current]===q.a?"good":"reveal");
+    const heading=document.createElement("strong");
+    heading.textContent=answers[current]===q.a ? "Jawaban benar!" : "Kesempatan mencoba sudah habis.";
+    const body=document.createElement("div");
+    body.textContent=`Kunci jawaban: ${"ABCD"[q.a]}. ${q.o[q.a]} Pembahasan: ${q.e}`;
+    fb.append(heading,body);
+  } else if(tries===1){
+    $("retryAnswerBtn").classList.remove("hidden");
+  }
+
+  $("prevBtn").disabled=current===0;
+  $("nextBtn").classList.toggle("hidden",current===questions.length-1);
+  $("finishBtn").classList.toggle("hidden",current!==questions.length-1);
+  $("nextBtn").disabled=!done;
+  $("finishBtn").disabled=!done;
+  $("navdots").innerHTML="";
+  questions.forEach((_,i)=>{
+    const b=document.createElement("button");
+    b.className="dot"+(checked[i]?" done":"")+(i===current?" current":"");
+    b.textContent=i+1; b.title="Buka soal "+(i+1);
+    b.disabled=i!==current && !checked[i];
+    b.onclick=()=>{current=i;render();};
+    $("navdots").appendChild(b);
+  });
+}
+function checkAnswer(){
+  if(answers[current]===null)return;
+  const q=questions[current], fb=$("answerFeedback");
+  if(answers[current]===q.a){
+    attempts[current]=attempts[current]===0?1:2; checked[current]=true;
+    render();
+    const box=$("answerFeedback");
+    box.className="answer-feedback good";
+    box.innerHTML="";
+    const h=document.createElement("strong");h.textContent="Jawaban benar!";
+    const t=document.createElement("div");t.textContent="Bagus! "+q.e;
+    box.append(h,t);
+  } else if(attempts[current]===0){
+    attempts[current]=1;
+    fb.className="answer-feedback try"; fb.innerHTML="";
+    const h=document.createElement("strong");h.textContent="Belum tepat. Kamu masih punya satu kesempatan.";
+    const t=document.createElement("div");t.textContent="Periksa kembali urutan operasi dan coba sekali lagi. Kunci jawaban belum ditampilkan.";
+    fb.append(h,t);
+    $("checkBtn").classList.add("hidden");
+    $("retryAnswerBtn").classList.remove("hidden");
+    $("attemptNote").textContent="Kesempatan kedua tersedia.";
+    document.querySelectorAll("#options .option").forEach(b=>b.disabled=true);
+  } else {
+    checked[current]=true;
+    render();
+  }
+}
+function retryAnswer(){
+  answers[current]=null;
+  $("answerFeedback").className="hidden";
+  $("retryAnswerBtn").classList.add("hidden");
+  $("checkBtn").classList.remove("hidden");
+  $("attemptNote").textContent="Kesempatan terakhir: pilih jawaban dengan teliti.";
+  render();
+}
+function finish(){
+  const incomplete=checked.filter(x=>!x).length;
+  if(incomplete>0){alert("Periksa dan selesaikan semua soal sebelum mengumpulkan.");return;}
+  let score=0, correct=0, wrong=0;
+  questions.forEach((q,i)=>{
+    if(answers[i]===q.a){correct++;score+=attempts[i]===1?5:2.5;}else{wrong++;}
+  });
+  const empty=questions.length-checked.filter(Boolean).length;
+  $("quiz").classList.add("hidden");$("result").classList.remove("hidden");
+  $("score").textContent=Number(score.toFixed(1));
+  $("correctCount").textContent=correct;$("wrongCount").textContent=wrong;$("emptyCount").textContent=empty;
+  $("resultTitle").textContent=score>=85?"Hebat! Tantangan dikuasai.":score>=70?"Bagus! Terus tingkatkan.":"Tetap semangat, evaluasi pembahasanmu.";
+  $("studentSummary").textContent=`Nama: ${studentName} • Kelas: ${studentClass||"—"}`;
+  $("feedbackSummary").textContent="Skor: 5 poin untuk jawaban benar pada percobaan pertama dan 2,5 poin untuk jawaban benar pada percobaan kedua. Jawaban yang tetap salah setelah dua kesempatan memperoleh 0 poin.";
+  $("reviewList").innerHTML="";
+  questions.forEach((q,i)=>{
+    const ok=answers[i]===q.a, d=document.createElement("div");d.className="review";
+    const h=document.createElement("h3");h.textContent=`${i+1}. ${q.q}`;
+    const p1=document.createElement("p");p1.className=ok?"correct":"wrong";
+    p1.textContent=ok?`✓ Benar pada percobaan ${attempts[i]===1?"pertama":"kedua"}.`:"✗ Jawaban akhir belum tepat.";
+    const p2=document.createElement("p");p2.textContent=`Kunci: ${"ABCD"[q.a]}. ${q.o[q.a]}`;
+    const p3=document.createElement("p");p3.className="explain";p3.textContent="Pembahasan: "+q.e;
+    d.append(h,p1,p2,p3);$("reviewList").appendChild(d);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$("startBtn").onclick=start;
+$("checkBtn").onclick=checkAnswer;
+$("retryAnswerBtn").onclick=retryAnswer;
+$("prevBtn").onclick=()=>{if(current>0){current--;render();}};
+$("nextBtn").onclick=()=>{if(current<questions.length-1){current++;render();}};
+$("finishBtn").onclick=finish;
+$("retryBtn").onclick=()=>{
+  answers=Array(questions.length).fill(null);attempts=Array(questions.length).fill(0);
+  checked=Array(questions.length).fill(false);current=0;
+  $("result").classList.add("hidden");$("start").classList.remove("hidden");
+  $("student").value=studentName;$("className").value=studentClass;
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("printBtn").onclick=()=>window.print();
+</script>
+</body></html>
